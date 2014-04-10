@@ -1,3 +1,8 @@
+/*
+This example shows the problems with using prototypal inheritance alone. In
+particular this shows what happen using such pattern in combination with object
+properties that are of a reference type (like Array or Object are).
+ */
 "use strict";
 var
     Person = function Person(){
