@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit basic example</title>
+    <link rel="stylesheet" href="/css/qunit.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="/lib/qunit.js"></script>
+    <script>
+    test( "Shows QUnit basic API methods", function() {
+        QUnit.ok(true, "The value should be true");
+        QUnit.equal( 1, 1, "The value should be 1" );
+    });
+    </script>
+</body>
+</html>
