@@ -3,40 +3,28 @@
 <head>
     <meta charset="utf-8">
     <title>QUnit basic example</title>
-    <link rel="stylesheet" href="/css/qunit.css">
-    <script>
-        // This code is somewhere in the application
-        function parseIntegerCode(floatValue){
-            // trick of missing indication for base...
-            return parseInt(floatValue);
+    <style>
+        .amount-input {
+            text-align: right;
         }
-
-        function parseStudentsCount(input){
-            return parseInt(input);
-            
-            // trick of the +
-            //return parseInt(input.match(/\d$/)[0]);
+        .results {
+            font-size: 2em;
+            margin: 50px;
         }
-    </script>
+    </style>
+    <script src="/lib/jquery.js"></script>
 </head>
 <body>
-    <div id="qunit"></div>
-    <div id="qunit-fixture"></div>
-    <script src="/lib/qunit.js"></script>
-    <script>
-    test( "Shows QUnit basic API methods", function() {
-        var floatValue = "000012.34",
-            students = "the count is 30",
-            integerValue,
-            studentsCount;
-        
-        integerValue = parseIntegerCode(floatValue);
-        studentsCount = parseStudentsCount(students);
-
-        // Tests
-        QUnit.equal(integerValue, 12, "The integer value should match");
-        QUnit.equal(studentsCount, 30, "The number of students should be correctly extracted");
-    });
-    </script>
+    <h1>US / Euro Converter</h1>
+    <form action="#">
+        <select name="currencies" id="currencies">
+            <option value="eu-us" selected>Euro -&gt; US Dollar</option>
+            <option value="us-eu">US Dollar -&gt; Euro</option>
+        </select>
+        <label for="amount"></label>
+        <input type="text" name="amount" id="amount" class="amount-input" placeholder="Value to convert">
+    </form>
+    <div id="results" class="results"></div>
+    <script src="js/example-4/example-4-app.js"></script>
 </body>
 </html>
