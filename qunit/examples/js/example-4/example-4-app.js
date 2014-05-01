@@ -3,14 +3,19 @@ var app = {};
 (function(){
     "use strict";
     var
-        loadConversionRate = function loadConversionRate(){
-            return $.getJSON("rates.json");
+        dataLoader = {
+            load: function(url){
+                return $.getJSON(url);
+            }
         },
         converters = {
             // Gets an amount in Euro and converts it to US Dollars
             "eu-us": function convertToUSDolla(conversionRate){
                 return {
                     convert: function(amount){
+                        if (conversionRate === 1){
+                            return amount;
+                        }
                         return 0;
                     },
                     fromLabel: " Euro ",
@@ -28,7 +33,7 @@ var app = {};
                 };
             }
         },
-        makeConversion = function(converter, amount){
+        runConversion = function(converter, amount){
             console.log("Entered new value", amount);
 
             // Update DOM with results of conversion
@@ -43,7 +48,7 @@ var app = {};
             });
         };
 
-    function initialize(){
+    function initialize(converterID){
         var 
             $currencies = $("#currencies"),
             $amount = $("#amount");
@@ -51,21 +56,27 @@ var app = {};
         app.name = "Currency converter";
         // Load conversion rates
         // http://rate-exchange.appspot.com/currency?from=USD&to=EUR
-        $.getJSON("js/example-4/rates.json").done(function(data){
+        dataLoader.load("js/example-4/rates.json").done(function(data){
             console.log("Conversion rates loaded.");
             var
-                conversionRate = parseFloat(data.v),
-                converter = converters[$currencies.val()](conversionRate),
-                lastAmount = $amount.val();
+                converter,
+                lastAmount = $amount.val(),
+                getConversionRate = function getConversionRate(){
+                    return parseFloat(data.v);
+                },
+                setupConverter = function setupConverter(converterID, conversionRate){
+                    return converters[converterID](conversionRate);
+                };
                 
             // Register event to handle converter change
             $currencies.on("change", function(event){
                 var converterID = event.target.value;
+                // Reassign the converter according to the new converterID
+                converter = setupConverter(converterID, getConversionRate());
+
                 console.log("Changing converter to", converterID);
-                // Loads the required converter
-                converter = converters[converterID](conversionRate);
                 // Run the conversion also here
-                makeConversion(converter, $amount.val() || 0);
+                runConversion(converter, $amount.val() || 0);
             });
 
             // Register change event to trig conversion
@@ -84,13 +95,22 @@ var app = {};
                     return;
                 }
 
-                makeConversion(converter, amount);
+                runConversion(converter, amount);
             });
+
+            converter = setupConverter(converterID, getConversionRate());
 
         }).fail(function(jqXHR, error){
             console.log(error);
         });
     }
 
-    initialize();
+    //initialize();
+
+    // Exports for testing purposes
+    app.initialize = initialize;
+    app.testing = {
+        dataLoader: dataLoader,
+        converters: converters
+    };
 }());
